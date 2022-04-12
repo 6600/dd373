@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta http-equiv="Content-Language" content="utf-8" />
+  <title></title>
+  <meta content="all" name="robots" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta name="filetype" content="1" />
+  <meta name="publishedtype" content="1" />
+  <meta name="pagetype" content="2" />
+  <meta name="catalogs" content="" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+  <!--优先使用 IE 最新版本和 Chrome-->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!--360 使用Google Chrome Frame-->
+  <meta name="renderer" content="webkit">
+  <link charset="utf-8"  rel="stylesheet" href="https://cunchu.site/work/login/standard.css">
+  <!-- choose a theme file -->
+    <link rel="stylesheet" href="./theme.blue.css">
+    <!-- load jQuery and tablesorter scripts -->
+    <script type="text/javascript" src="./jquery-latest.min.js"></script>
+    <script type="text/javascript" src="./jquery.tablesorter.js"></script>
+
+    <!-- tablesorter widgets (optional) -->
+    <script type="text/javascript" src="./jquery.tablesorter.widgets.js"></script>
+  <style>
+
+  </style>
+</head>
+<body>
+  <div class="box">
+    <table id="myTable" class="tablesorter">
+      <thead>
+        <tr>
+          <th>大区</th>
+          <th>服务器</th>
+          <th>阵营</th>
+          <th>ID</th>
+          <th>单价</th>
+          <th>数量</th>
+          <th>报价</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+  </div>
+  <script>
+    $.extend($.tablesorter.defaults, {
+      theme: 'blue',
+      widthFixed: true
+    });
+    $(function() {
+      const mock = [
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20191203215252-87001',
+          20.04,
+          '4590',
+          19.438799999999997
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20210610144651-10006',
+          20.04,
+          '15000',
+          19.438799999999997
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20220328233617-49001',
+          20.01,
+          '1500',
+          19.4097
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20220301021359-96006',
+          20.02,
+          '63820',
+          19.4194
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20210720070913-89001',
+          20.03,
+          '19782',
+          19.429100000000002
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20220128204629-27001',
+          20.01,
+          '31517',
+          19.4097
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20220411110406-12020',
+          20.02,
+          '26800',
+          19.4194
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20191215161917-95001',
+          20.01,
+          '8650000',
+          19.4097
+        ],
+        [
+          '一区',
+          '哈霍兰(PVP)',
+          '联盟',
+          'MO20210218133346-53005',
+          20.01,
+          '9850000',
+          19.4097
+        ]
+      ]
+      let htmlTemp = ''
+      mock.forEach(element => {
+        htmlTemp += `<tr>`
+        element.forEach(element2 => {
+          htmlTemp += `<td>${element2}</td>`
+        });
+        htmlTemp += `</tr>`
+      });
+      document.querySelector('tbody').innerHTML = htmlTemp
+      $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
+    });
+  </script>
+  <script src="https://cunchu.site/work/login/standard.js"></script>
+</body>
+
+</html>

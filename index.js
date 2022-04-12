@@ -74,20 +74,22 @@ const Tool = {
 let returnList = []
 var options = {
   'method': 'GET',
-  'url': 'https://www.dd373.com/s-eja7u2-0r2mut-0acvkr-0-0-0-jk5sj0-0-0-0-0-0-1-0-0-0.html',
+  'url': 'https://www.dd373.com/s-eja7u2-0r2mut-0acvkr-67492s-0-0-jk5sj0-0-0-hot-0-0-1-0-0-0.html',
 };
 request(options, function (error, response) {
   if (error) throw new Error(error);
   // console.log(response.body);
   const dom = new JSDOM(response.body);
-  const dataList = dom.window.document.querySelectorAll(".goods-list-item")
+  const dataList = dom.window.document.querySelectorAll(".hot-goods-list-content ul")
   dataList.forEach(element => {
     let temp = []
-    temp = temp.concat(element.querySelector('.game-qufu-value').textContent.split('/'))
-    temp.push(element.querySelector('.goods-list-title').href.replace('/detail-', '').replace('.html', ''))
-    const danjia = parseFloat(element.querySelector('.game-currency-price span').textContent.replace('￥', ''))
+    temp.push(dom.window.document.querySelectorAll('.next-dir')[1].textContent)
+    temp.push(dom.window.document.querySelectorAll('.next-dir')[2].textContent)
+    temp.push(dom.window.document.querySelectorAll('.next-dir')[3].textContent)
+    temp.push(element.querySelector('.hot-active').id.replace('hotNum', ''))
+    const danjia = parseFloat(element.querySelector('.bold').textContent)
     temp.push(danjia)
-    temp.push(element.querySelector('.kucun span').textContent)
+    temp.push(element.querySelector('.width364 .line-height14 .colorFF5').textContent)
     temp.push(danjia * 0.97)
     returnList.push(temp)
   });
