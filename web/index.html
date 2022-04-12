@@ -38,10 +38,17 @@
           <th>大区</th>
           <th>服务器</th>
           <th>阵营</th>
-          <th>ID</th>
+          <th>销售商ID</th>
+          <th>库存</th>
+          <th>一元的数量</th>
           <th>单价</th>
-          <th>数量</th>
-          <th>报价</th>
+          <th>实际售价</th>
+          <th>收货</th>
+          <th>收货商家ID</th>
+          <th>收货数量</th>
+          <th>一元的数量</th>
+          <th>单价</th>
+          <th>实际单价</th>
         </tr>
       </thead>
       <tbody>
@@ -55,99 +62,42 @@
       widthFixed: true
     });
     $(function() {
-      const mock = [
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20191203215252-87001',
-          20.04,
-          '4590',
-          19.438799999999997
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20210610144651-10006',
-          20.04,
-          '15000',
-          19.438799999999997
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20220328233617-49001',
-          20.01,
-          '1500',
-          19.4097
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20220301021359-96006',
-          20.02,
-          '63820',
-          19.4194
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20210720070913-89001',
-          20.03,
-          '19782',
-          19.429100000000002
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20220128204629-27001',
-          20.01,
-          '31517',
-          19.4097
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20220411110406-12020',
-          20.02,
-          '26800',
-          19.4194
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20191215161917-95001',
-          20.01,
-          '8650000',
-          19.4097
-        ],
-        [
-          '一区',
-          '哈霍兰(PVP)',
-          '联盟',
-          'MO20210218133346-53005',
-          20.01,
-          '9850000',
-          19.4097
-        ]
-      ]
-      let htmlTemp = ''
-      mock.forEach(element => {
-        htmlTemp += `<tr>`
-        element.forEach(element2 => {
-          htmlTemp += `<td>${element2}</td>`
-        });
-        htmlTemp += `</tr>`
-      });
-      document.querySelector('tbody').innerHTML = htmlTemp
-      $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      fetch("/get", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          let zuhe = []
+          console.log(result)
+          for (const key in result.jsList) {
+            if (Object.hasOwnProperty.call(result.jsList, key)) {
+              const element = result.jsList[key];
+              for (let index = 0; index < element.length; index++) {
+                const element2 = element[index];
+                if (result.shList && result.shList[key] && result.shList[key][index]) {
+                  const temp = result.shList[key][index]
+                  result.jsList[key][index].push('', temp[3], temp[4], temp[5], temp[6], temp[7])
+                  zuhe.push(result.jsList[key][index])
+                }
+              }
+            }
+          }
+          console.log(zuhe)
+          let htmlTemp = ''
+          zuhe.forEach(element => {
+            htmlTemp += `<tr>`
+            element.forEach(element2 => {
+              htmlTemp += `<td>${element2}</td>`
+            });
+            htmlTemp += `</tr>`
+          });
+          document.querySelector('tbody').innerHTML = htmlTemp
+          $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
+        })
+        .catch(error => console.log('error', error));
     });
   </script>
   <script src="https://cunchu.site/work/login/standard.js"></script>

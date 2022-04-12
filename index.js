@@ -1,6 +1,22 @@
 var request = require('request');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+// 静态目录
+app.use('/',express.static('web'));
+
+app.get('/get', (req, res) => {
+  res.send(JSON.stringify({shList, jsList}))
+})
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
 const Tool = {
   wow:{
     isMillisecondStamp:function(num){if(num.length===10){return num*1000;}else if(num.length===13) {return num;}else {console.log(num+"不是一个标准的时间戳！");return false;}},
@@ -71,27 +87,87 @@ const Tool = {
   }
 }
 
-let returnList = []
-var options = {
-  'method': 'GET',
-  'url': 'https://www.dd373.com/s-eja7u2-0r2mut-0acvkr-67492s-0-0-jk5sj0-0-0-hot-0-0-1-0-0-0.html',
-};
-request(options, function (error, response) {
-  if (error) throw new Error(error);
-  // console.log(response.body);
-  const dom = new JSDOM(response.body);
-  const dataList = dom.window.document.querySelectorAll(".hot-goods-list-content ul")
-  dataList.forEach(element => {
-    let temp = []
-    temp.push(dom.window.document.querySelectorAll('.next-dir')[1].textContent)
-    temp.push(dom.window.document.querySelectorAll('.next-dir')[2].textContent)
-    temp.push(dom.window.document.querySelectorAll('.next-dir')[3].textContent)
-    temp.push(element.querySelector('.hot-active').id.replace('hotNum', ''))
-    const danjia = parseFloat(element.querySelector('.bold').textContent)
-    temp.push(danjia)
-    temp.push(element.querySelector('.width364 .line-height14 .colorFF5').textContent)
-    temp.push(danjia * 0.97)
-    returnList.push(temp)
+// let returnList = []
+// var options = {
+//   'method': 'GET',
+//   'url': 'https://www.dd373.com/s-eja7u2-0r2mut-0acvkr-67492s-0-0-jk5sj0-0-0-hot-0-0-1-0-0-0.html',
+// };
+// request(options, function (error, response) {
+//   if (error) throw new Error(error);
+//   // console.log(response.body);
+//   const dom = new JSDOM(response.body);
+//   const dataList = dom.window.document.querySelectorAll(".hot-goods-list-content ul")
+//   dataList.forEach(element => {
+//     let temp = []
+//     temp.push(dom.window.document.querySelectorAll('.next-dir')[1].textContent)
+//     temp.push(dom.window.document.querySelectorAll('.next-dir')[2].textContent)
+//     temp.push(dom.window.document.querySelectorAll('.next-dir')[3].textContent)
+//     temp.push(element.querySelector('.hot-active').id.replace('hotNum', ''))
+//     const danjia = parseFloat(element.querySelector('.bold').textContent)
+//     temp.push(danjia)
+//     temp.push(element.querySelector('.width364 .line-height14 .colorFF5').textContent)
+//     temp.push(danjia * 0.97)
+//     returnList.push(temp)
+//   });
+//   console.log(returnList)
+// });
+
+// const testTemp = {"StatusCode":"0","StatusMsg":"请求成功","StatusData":{"ResultCode":"0","ResultMsg":"操作成功","ResultData":{"RouteName":"游戏服","LevelType":3,"GameOther":[{"Id":"80512c89151940d18fdcaa1612cd24fd","Name":"阿拉希盆地(PVP)","Identify":"8kttb0","NameSpell":"alxpd(pvp)阿拉希盆地(PVP)alaxipendi(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"764d5ca4e065424d843ebb6f6b4dc786","Name":"神谕林地(PVP)","Identify":"0pf223","NameSpell":"syld(pvp)神谕林地(PVP)shenyulindi(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"56cd5680066446d0803d2f51f954d43d","Name":"巨龙沼泽(PVP)","Identify":"ge82p4","NameSpell":"jlzz(pvp)巨龙沼泽(PVP)julongzhaoze(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"64fb547d1c2b49db9987785b92e3f9e3","Name":"圣光之愿(PVP)","Identify":"qnea70","NameSpell":"sgzy(pvp)圣光之愿(PVP)shengguangzhiyuan(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"7cb6305f960340e4ae0b97b0519e48bb","Name":"祖尔格拉布(PVP)","Identify":"fc839x","NameSpell":"zeglb(pvp)祖尔格拉布(PVP)zuergelabu(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"3bb25937235346d886e6657d42a6b63c","Name":"黑石山(PVP)","Identify":"7sgdm3","NameSpell":"hss(pvp)黑石山(PVP)heishishan(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"efbebdd677e94e2b91d2d3236bcc3a44","Name":"流沙岗哨(PVP)","Identify":"t52v2h","NameSpell":"lsgs(pvp)流沙岗哨(PVP)liushagangshao(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"9695f78437424f5cb2592f3167202bd6","Name":"甲虫之墙(PVP)","Identify":"6fhvcu","NameSpell":"jczq(pvp)甲虫之墙(PVP)jiachongzhiqiang(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false}]}}}
+
+const DQ = [
+  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '奥罗'],
+]
+// 07a8d16fa226497c9616bce702a67eb7
+// 61b65070243c4453b653fa82c8b39bd1
+const ZY = [
+  ['联盟', 'a887fd4253834330be65090655face44'],
+  ['部落', 'c0cc0b7f2edf415396bec4928d8ceebd']
+]
+
+// let dq = []
+
+// testTemp.StatusData.ResultData.GameOther.forEach(element => {
+//   // console.log(element)
+//   dq.push(['八区', element.Id, element.Name, element.Identify])
+// });
+// console.log(dq)
+
+let shList = {}
+let jsList = {}
+
+DQ.forEach(element => {
+  console.log(element)
+  ZY.forEach(element2 => {
+    const url = `https://goods.dd373.com/Api/MallGoods/UserCenter/ListCoinIndexRecommendHotShop?LastId=${element2[1]}&GoodsType=${element[1]}`
+    console.log(url)
+    var options = {
+      'method': 'GET',
+      'url': url,
+    };
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+      const temp = JSON.parse(response.body)
+      temp.StatusData.ResultData.forEach(element3 => {
+        if (!shList[element[0] + element[2] + element2[0]]) shList[element[0] + element[2] + element2[0]] = []
+        shList[element[0] + element[2] + element2[0]].push([element[0], element[2], element2[0], element3.Name, element3.Inventory, element3.SingleUnit, element3.SinglePrice, element3.SinglePrice * 0.97])
+      });
+      console.log(shList)
+    });
+    const url2 = `https://goods.dd373.com/Api/Receive/UserCenter/ListCoinIndexRecommendNeedReceive?LastId=${element2[1]}&GoodsType=${element[1]}`
+    console.log(url2)
+    var options = {
+      'method': 'GET',
+      'url': url2,
+    };
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+      const temp = JSON.parse(response.body)
+      temp.StatusData.ResultData.forEach(element3 => {
+        // console.log(element3.SingleUnit)
+        if (!jsList[element[0] + element[2] + element2[0]]) jsList[element[0] + element[2] + element2[0]] = []
+        jsList[element[0] + element[2] + element2[0]].push([element[0], element[2], element2[0], element3.Name, element3.Inventory, element3.SingleUnit, element3.SinglePrice, element3.SinglePrice * 0.97])
+      })
+    });
   });
-  console.log(returnList)
 });
+
