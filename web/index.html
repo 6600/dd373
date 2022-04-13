@@ -27,14 +27,39 @@
     <!-- tablesorter widgets (optional) -->
     <script type="text/javascript" src="./jquery.tablesorter.widgets.js"></script>
   <style>
-
+    .title-bar {
+      display: flex;
+      justify-content: end;
+    }
+    .title-bar span, .title-bar button {
+      display: inline-block;
+      margin: 0 10px;
+    }
+    tbody tr {
+      display: none;
+    }
+    tbody tr.bar-1 {
+      display: table-row;
+    }
   </style>
 </head>
 <body>
+  <div class="title-bar">
+    <span>通过服务器筛选</span>
+    <select class="fwq">
+      <option value="">不限</option>
+    </select>
+    <span style="display: none;">通过排名筛选</span>
+    <select class="pm" style="display: none;">
+      <option value="">不限</option>
+    </select>
+    <button onclick="shaixuan()">筛选</button>
+  </div>
   <div class="box">
     <table id="myTable" class="tablesorter">
       <thead>
         <tr>
+          <th>大区</th>
           <th>大区</th>
           <th>服务器</th>
           <th>阵营</th>
@@ -49,6 +74,7 @@
           <th>一元的数量</th>
           <th>单价</th>
           <th>实际单价</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -61,7 +87,7 @@
       theme: 'blue',
       widthFixed: true
     });
-    $(function() {
+    function shaixuan () {
       var requestOptions = {
         method: 'GET',
         redirect: 'follow'
@@ -72,33 +98,80 @@
         .then(result => {
           let zuhe = []
           console.log(result)
-          for (const key in result.jsList) {
-            if (Object.hasOwnProperty.call(result.jsList, key)) {
-              const element = result.jsList[key];
+          
+          for (const key in result.shList) {
+            if (Object.hasOwnProperty.call(result.shList, key)) {
+              const element = result.shList[key];
               for (let index = 0; index < element.length; index++) {
                 const element2 = element[index];
-                if (result.shList && result.shList[key] && result.shList[key][index]) {
-                  const temp = result.shList[key][index]
-                  result.jsList[key][index].push('', temp[3], temp[4], temp[5], temp[6], temp[7])
-                  zuhe.push(result.jsList[key][index])
+                if (result.jsList && result.jsList[key] && result.jsList[key][index]) {
+                  const temp = result.jsList[key][index]
+                  result.shList[key][index].push('', temp[3], temp[4], temp[5], temp[6], temp[7])
+                  if (document.querySelector('.fwq').value == '') {
+                    zuhe.push(result.shList[key][index])
+                  } else if (document.querySelector('.fwq').value == result.shList[key][index][1]) {
+                    zuhe.push(result.shList[key][index])
+                  }
+                  
                 }
               }
             }
           }
-          console.log(zuhe)
+          
           let htmlTemp = ''
+          let indexTemp = 1
+          let tempStr = ''
+
+          let fwqList = new Set()
+          let pmList = new Set()
           zuhe.forEach(element => {
-            htmlTemp += `<tr>`
-            element.forEach(element2 => {
-              htmlTemp += `<td>${element2}</td>`
-            });
-            htmlTemp += `</tr>`
+            console.log(element)
+            fwqList.add(element[1])
+            if (element[1] !== tempStr) {
+              tempStr = element[1]
+              indexTemp = 1
+            }
+            pmList.add(indexTemp)
+            if (document.querySelector('.pm').value == '' || document.querySelector('.pm').value == indexTemp) {
+              htmlTemp += `<tr class="bar-${indexTemp}" data="${element[0]}-${element[1]}-${element[2]}"><td>${indexTemp++}</td>`
+              // console.log(fwqList)
+              element.forEach(element2 => {
+                htmlTemp += `<td>${element2}</td>`
+              });
+              if (indexTemp == 2) {
+                htmlTemp += `<td><span class="more" onclick="showMore('${element[0]}-${element[1]}-${element[2]}')">﹀</span></td>`
+              } else {
+                htmlTemp += `<td></td>`
+              }
+              htmlTemp += `</tr>`
+            }
+            
           });
           document.querySelector('tbody').innerHTML = htmlTemp
           $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
+          // 
+          let fwqTemp = '<option value="">不限</option>'
+          fwqList.forEach(element => {
+            fwqTemp += `<option value="${element}">${element}</option>`
+          });
+          document.querySelector('.fwq').innerHTML = fwqTemp
+          let pmTemp = '<option value="">不限</option>'
+          pmList.forEach(element => {
+            pmTemp += `<option value="${element}">${element}</option>`
+          });
+          document.querySelector('.pm').innerHTML = pmTemp
         })
         .catch(error => console.log('error', error));
+    }
+    $(function() {
+      shaixuan()
     });
+    function showMore (classStr) {
+      console.log(classStr)
+      document.querySelectorAll(`[data="${classStr}"]`).forEach(element => {
+        element.style.display = 'table-row'
+      });
+    }
   </script>
   <script src="https://cunchu.site/work/login/standard.js"></script>
 </body>
