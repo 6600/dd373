@@ -41,6 +41,54 @@
     tbody tr.bar-1 {
       display: table-row;
     }
+    .lf, .lr {
+      width: 50%;
+      float: left;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    
+    td,th {
+        padding: 0;
+    }
+    
+    
+    .pure-table caption {
+        color: #000;
+        font: italic 85%/1 arial,sans-serif;
+        padding: 1em 0;
+        text-align: center;
+    }
+    
+    td,th {
+        border-left: 1px solid #cbcbcb;
+        border-width: 0 0 0 1px;
+        font-size: inherit;
+        margin: 0;
+        overflow: visible;
+        padding: .5em 1em;
+    }
+    
+    thead {
+        background-color: #e0e0e0;
+        color: #000;
+        text-align: left;
+        vertical-align: bottom;
+    }
+    
+    td {
+        background-color: transparent;
+    }
+    .pure-table-horizontal td,.pure-table-horizontal th {
+        border-width: 0 0 1px 0;
+        border-bottom: 1px solid #cbcbcb;
+    }
+    
+    .pure-table-horizontal tbody>tr:last-child>td {
+        border-bottom-width: 0;
+    }
   </style>
 </head>
 <body>
@@ -56,31 +104,8 @@
     <button onclick="shaixuan()">筛选</button>
   </div>
   <div class="box">
-    <table id="myTable" class="tablesorter">
-      <thead>
-        <tr>
-          <th>大区</th>
-          <th>大区</th>
-          <th>服务器</th>
-          <th>阵营</th>
-          <th>销售商ID</th>
-          <th>库存</th>
-          <th>一元的数量</th>
-          <th>单价</th>
-          <th>实际售价</th>
-          <th>收货</th>
-          <th>收货商家ID</th>
-          <th>收货数量</th>
-          <th>一元的数量</th>
-          <th>单价</th>
-          <th>实际单价</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-
-      </tbody>
-    </table>
+    <div class="lf"></div>
+    <div class="lr"></div>
   </div>
   <script>
     $.extend($.tablesorter.defaults, {
@@ -97,20 +122,23 @@
         .then(response => response.json())
         .then(result => {
           let zuhe = []
+          let zuhe2 = []
           console.log(result)
           
-          for (const key in result.shList) {
-            if (Object.hasOwnProperty.call(result.shList, key)) {
-              const element = result.shList[key];
+          for (const key in result.shList2) {
+            if (Object.hasOwnProperty.call(result.shList2, key)) {
+              const element = result.shList2[key];
               for (let index = 0; index < element.length; index++) {
                 const element2 = element[index];
-                if (result.jsList && result.jsList[key] && result.jsList[key][index]) {
-                  const temp = result.jsList[key][index]
-                  result.shList[key][index].push('', temp[3], temp[4], temp[5], temp[6], temp[7])
+                if (result.jsList2 && result.jsList2[key] && result.jsList2[key][index]) {
+                  const temp = result.jsList2[key][index]
+                  // result.shList2[key][index].push('', temp[3], temp[4], temp[5], temp[6], temp[7])
                   if (document.querySelector('.fwq').value == '') {
-                    zuhe.push(result.shList[key][index])
-                  } else if (document.querySelector('.fwq').value == result.shList[key][index][1]) {
-                    zuhe.push(result.shList[key][index])
+                    zuhe.push(result.shList2[key][index])
+                    zuhe2.push([result.shList2[key][index][0], result.shList2[key][index][1], result.shList2[key][index][2], temp[3], temp[4], temp[5], temp[6], temp[7]])
+                  } else if (document.querySelector('.fwq').value == result.shList2[key][index][1]) {
+                    zuhe.push(result.shList2[key][index])
+                    zuhe2.push([result.shList2[key][index][0], result.shList2[key][index][1], result.shList2[key][index][2], temp[3], temp[4], temp[5], temp[6], temp[7]])
                   }
                   
                 }
@@ -119,18 +147,24 @@
           }
           
           let htmlTemp = ''
+          let htmlTemp2 = ''
           let indexTemp = 1
           let tempStr = ''
 
           let fwqList = new Set()
           let pmList = new Set()
+          let fenleiTemp = ''
+          console.log(zuhe)
+          console.log(zuhe2)
           zuhe.forEach(element => {
-            console.log(element)
+            // console.log(element)
             fwqList.add(element[1])
             if (element[1] !== tempStr) {
               tempStr = element[1]
               indexTemp = 1
+              htmlTemp += `</tbody></table><table class="tablesorter"><thead><tr><th>大区</th><th>大区</th><th>服务器</th><th>阵营</th><th>销售商ID</th><th>库存</th><th>一元的数量</th><th>单价</th><th>实际售价</th><th>操作</th></tr></thead><tbody>`
             }
+            
             pmList.add(indexTemp)
             if (document.querySelector('.pm').value == '' || document.querySelector('.pm').value == indexTemp) {
               htmlTemp += `<tr class="bar-${indexTemp}" data="${element[0]}-${element[1]}-${element[2]}"><td>${indexTemp++}</td>`
@@ -147,8 +181,37 @@
             }
             
           });
-          document.querySelector('tbody').innerHTML = htmlTemp
-          $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
+          htmlTemp += `</tbody></table>`
+          // 表格2
+          zuhe2.forEach(element => {
+            // console.log(element)
+            fwqList.add(element[1])
+            if (element[1] !== tempStr) {
+              tempStr = element[1]
+              indexTemp = 1
+              htmlTemp2 += `</tbody></table><table class="tablesorter"><thead><tr><th>大区</th><th>大区</th><th>服务器</th><th>阵营</th><th>收货商家ID</th><th>收货数量</th><th>一元的数量</th><th>单价</th><th>实际单价</th><th>操作</th></tr></thead><tbody>`
+            }
+            
+            pmList.add(indexTemp)
+            if (document.querySelector('.pm').value == '' || document.querySelector('.pm').value == indexTemp) {
+              htmlTemp2 += `<tr class="bar-${indexTemp}" data="${element[0]}-${element[1]}-${element[2]}"><td>${indexTemp++}</td>`
+              // console.log(fwqList)
+              element.forEach(element2 => {
+                htmlTemp2 += `<td>${element2}</td>`
+              });
+              if (indexTemp == 2) {
+                htmlTemp2 += `<td><span class="more" onclick="showMore('${element[0]}-${element[1]}-${element[2]}')">﹀</span></td>`
+              } else {
+                htmlTemp2 += `<td></td>`
+              }
+              htmlTemp2 += `</tr>`
+            }
+            
+          });
+          htmlTemp2 += `</tbody></table>`
+          document.querySelector('.box .lf').innerHTML = htmlTemp
+          document.querySelector('.box .lr').innerHTML = htmlTemp2
+          // $(".tablesorter").tablesorter({ sortList: [[0,0], [1,0]] });
           // 
           let fwqTemp = '<option value="">不限</option>'
           fwqList.forEach(element => {

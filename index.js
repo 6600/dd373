@@ -4,13 +4,24 @@ const { JSDOM } = jsdom;
 
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 3001
+var fs = require('fs');
 
 // 静态目录
 app.use('/',express.static('web'));
 
 app.get('/get', (req, res) => {
-  res.send(JSON.stringify({shList, jsList}))
+  let shList2 = []
+  let jsList2 = []
+  DQ.forEach(element => {
+    if (shList[element[0] + element[2] + element[4]]) {
+      shList2.push(shList[element[0] + element[2] + element[4]])
+    }
+    if (jsList[element[0] + element[2] + element[4]]) {
+      jsList2.push(jsList[element[0] + element[2] + element[4]])
+    }
+  });
+  res.send(JSON.stringify({shList, jsList, shList2, jsList2}))
 })
 
 app.listen(port, '0.0.0.0', () => {
@@ -114,16 +125,7 @@ const Tool = {
 
 // const testTemp = {"StatusCode":"0","StatusMsg":"请求成功","StatusData":{"ResultCode":"0","ResultMsg":"操作成功","ResultData":{"RouteName":"游戏服","LevelType":3,"GameOther":[{"Id":"80512c89151940d18fdcaa1612cd24fd","Name":"阿拉希盆地(PVP)","Identify":"8kttb0","NameSpell":"alxpd(pvp)阿拉希盆地(PVP)alaxipendi(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"764d5ca4e065424d843ebb6f6b4dc786","Name":"神谕林地(PVP)","Identify":"0pf223","NameSpell":"syld(pvp)神谕林地(PVP)shenyulindi(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"56cd5680066446d0803d2f51f954d43d","Name":"巨龙沼泽(PVP)","Identify":"ge82p4","NameSpell":"jlzz(pvp)巨龙沼泽(PVP)julongzhaoze(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"64fb547d1c2b49db9987785b92e3f9e3","Name":"圣光之愿(PVP)","Identify":"qnea70","NameSpell":"sgzy(pvp)圣光之愿(PVP)shengguangzhiyuan(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"7cb6305f960340e4ae0b97b0519e48bb","Name":"祖尔格拉布(PVP)","Identify":"fc839x","NameSpell":"zeglb(pvp)祖尔格拉布(PVP)zuergelabu(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"3bb25937235346d886e6657d42a6b63c","Name":"黑石山(PVP)","Identify":"7sgdm3","NameSpell":"hss(pvp)黑石山(PVP)heishishan(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"efbebdd677e94e2b91d2d3236bcc3a44","Name":"流沙岗哨(PVP)","Identify":"t52v2h","NameSpell":"lsgs(pvp)流沙岗哨(PVP)liushagangshao(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false},{"Id":"9695f78437424f5cb2592f3167202bd6","Name":"甲虫之墙(PVP)","Identify":"6fhvcu","NameSpell":"jczq(pvp)甲虫之墙(PVP)jiachongzhiqiang(pvp)","CurrentLevelType":3,"IsClose":false,"ParentId":"af5a528b92344cd8aedb9c35bdaf26ec","ChildModels":null,"IsEnabled":false}]}}}
 
-const DQ = [
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '奥罗', 'a887fd4253834330be65090655face44', '联盟'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '奥罗', 'c0cc0b7f2edf415396bec4928d8ceebd', '部落'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '沙尔图拉', 'd93b49b3021245f884a18bad886df0d1', '联盟'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '沙尔图拉', '2c0e64a1754940dc847141f937af6d81', '部落'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '水晶之牙', 'e7aa3e0eff9f4df5ab96bd3e520cc96d', '联盟'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '水晶之牙', 'd5a270972a0b4d338606ad82733d6652', '部落'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '霜语', '502f8f19893f40199d3535da9febed09', '联盟'],
-  [ '一区', '61b65070243c4453b653fa82c8b39bd1', '霜语', 'c7b541fe1da146ea9ecd43dc8937240f', '部落'],
-]
+let DQ = JSON.parse(fs.readFileSync('./config.json',{flag:'r',encoding:'utf-8'}))
 
 // let dq = []
 
@@ -137,9 +139,9 @@ let shList = {}
 let jsList = {}
 
 DQ.forEach(element => {
-  console.log(element)
+  // console.log(element)
   const url = `https://goods.dd373.com/Api/MallGoods/UserCenter/ListCoinIndexRecommendHotShop?LastId=${element[3]}&GoodsType=${element[1]}`
-  console.log(url)
+  // console.log(url)
   var options = {
     'method': 'GET',
     'url': url,
@@ -149,12 +151,12 @@ DQ.forEach(element => {
     const temp = JSON.parse(response.body)
     temp.StatusData.ResultData.forEach(element3 => {
       if (!shList[element[0] + element[2] + element[4]]) shList[element[0] + element[2] + element[4]] = []
-      shList[element[0] + element[2] + element[4]].push([element[0], element[2], element[4], element3.Name, element3.Inventory.toFixed(2), element3.SingleUnit.toFixed(2), element3.SinglePrice.toFixed(2), (element3.SinglePrice * 0.97).toFixed(2)])
+      shList[element[0] + element[2] + element[4]].push([element[0], element[2], element[4], element3.Name, element3.Inventory, element3.SingleUnit.toFixed(6), element3.SinglePrice.toFixed(6), (element3.SinglePrice * 0.97).toFixed(6)])
     });
-    console.log(shList)
+    // console.log(shList)
   });
   const url2 = `https://goods.dd373.com/Api/Receive/UserCenter/ListCoinIndexRecommendNeedReceive?LastId=${element[3]}&GoodsType=${element[1]}`
-  console.log(url2)
+  // console.log(url2)
   var options = {
     'method': 'GET',
     'url': url2,
@@ -165,7 +167,7 @@ DQ.forEach(element => {
     temp.StatusData.ResultData.forEach(element3 => {
       // console.log(element3.SingleUnit)
       if (!jsList[element[0] + element[2] + element[4]]) jsList[element[0] + element[2] + element[4]] = []
-      jsList[element[0] + element[2] + element[4]].push([element[0], element[2], element[4], element3.Name, element3.Inventory.toFixed(2), element3.SingleUnit.toFixed(2), element3.SinglePrice.toFixed(2), (element3.SinglePrice * 0.97).toFixed(2)])
+      jsList[element[0] + element[2] + element[4]].push([element[0], element[2], element[4], element3.Name, element3.Inventory, element3.SingleUnit.toFixed(6), element3.SinglePrice.toFixed(6), ''])
     })
   });
 });
